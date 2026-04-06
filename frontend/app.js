@@ -1,4 +1,5 @@
-const API_BASE = "http://127.0.0.1:8000"; // Adjust if backend runs elsewhere
+const isDev = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+const API_BASE = isDev ? "http://127.0.0.1:8000/api" : "/api"; // Auto-route to Vercel Serverless Functions in production
 
 // Firebase Init
 const firebaseConfig = {

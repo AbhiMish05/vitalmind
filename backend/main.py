@@ -16,13 +16,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(food_router, prefix="/food")
-app.include_router(insights_router, prefix="/insights")
-app.include_router(image_router, prefix="/food")
-app.include_router(free_api_router, prefix="/free-apis")
-app.include_router(chatbot_router, prefix="/chatbot")
+app.include_router(food_router, prefix="/api/food")
+app.include_router(insights_router, prefix="/api/insights")
+app.include_router(image_router, prefix="/api/food")
+app.include_router(free_api_router, prefix="/api/free-apis")
+app.include_router(chatbot_router, prefix="/api/chatbot")
 
 
-@app.get("/")
+@app.get("/api")
 def root():
-    return {"message": "VitalMind Backend Running"}
+    return {"message": "VitalMind API Running"}
