@@ -27,30 +27,16 @@ def log_meal(meal: Meal):
 @router.post("/photo-log")
 async def log_meal_with_photo(
     file: UploadFile = File(...),
-    name: str = Form("Photo Logged Meal"),
-    calories: float = Form(0),
-    protein: float = Form(0),
-    carbs: float = Form(0),
-    fat: float = Form(0)
+    name: str = Form("Photo Logged Meal")
 ):
     contents = await file.read()
 
-    used_prediction = False
-    prediction_meta = None
-    if calories == 0 and protein == 0 and carbs == 0 and fat == 0:
-        predicted = predict_nutrition_from_food_photo(contents)
-        nutrition = predicted["nutrition"]
-        calories = nutrition["calories"]
-        protein = nutrition["protein"]
-        carbs = nutrition["carbs"]
-        fat = nutrition["fat"]
-        used_prediction = True
-        prediction_meta = {
-            "prediction_mode": "visual_estimation",
-            "food_profile": predicted["profile"],
-            "confidence": predicted["confidence"],
-            "visual_metrics": predicted["visual_metrics"]
-        }
+    predicted = predict_nutrition_from_food_photo(contents)
+    nutrition = predicted["nutrition"]
+    calories = nutrition["calories"]
+    protein = nutrition["protein"]
+    carbs = nutrition["carbs"]
+    fat = nutrition["fat"]
 
     # Keep only lightweight photo metadata in memory; image stays on client side.
     meal = {
@@ -64,10 +50,12 @@ async def log_meal_with_photo(
     meals_db.append(meal)
     response = {
         "message": "Meal with photo added",
-        "meal": meal
+        "meal": meal,
+        "prediction_mode": predicted.get("prediction_mode", "visual_estimation"),
+        "food_profile": predicted.get("profile", "mixed_meal"),
+        "confidence": predicted.get("confidence", "medium"),
+        "visual_metrics": predicted.get("visual_metrics", {}),
+        "note": "Nutrition estimated automatically from uploaded food image"
     }
-    if used_prediction and prediction_meta:
-        response.update(prediction_meta)
-        response["note"] = "Nutrition estimated automatically from uploaded food photo"
 
     return response

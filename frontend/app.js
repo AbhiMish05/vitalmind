@@ -407,10 +407,8 @@ function showOutput(data) {
     let modeTag = "OCR";
     if (data.prediction_mode === "visual_estimation" || data.prediction_mode === "vision_local_fast") {
       modeTag = "AI Vision";
-    } else if (data.prediction_mode === "vision_ollama_direct") {
-      modeTag = "Ollama Vision";
-    } else if (data.prediction_mode === "vision_plus_ollama") {
-      modeTag = "AI Vision + Ollama";
+    } else if (data.prediction_mode === "vision_qwen_direct") {
+      modeTag = "Qwen Vision";
     } else if (data.prediction_mode === "hybrid_ocr_vision") {
       modeTag = "Hybrid OCR + Vision";
     }
@@ -579,20 +577,12 @@ document.getElementById("food-photo-form").addEventListener("submit", async (eve
   }
 
   const payload = {
-    name: document.getElementById("food-photo-name").value.trim() || "Photo Logged Meal",
-    calories: Number(document.getElementById("food-photo-calories").value || 0),
-    protein: Number(document.getElementById("food-photo-protein").value || 0),
-    carbs: Number(document.getElementById("food-photo-carbs").value || 0),
-    fat: Number(document.getElementById("food-photo-fat").value || 0)
+    name: document.getElementById("food-photo-name").value.trim() || "Photo Logged Meal"
   };
 
   const formData = new FormData();
   formData.append("file", file);
   formData.append("name", payload.name);
-  formData.append("calories", String(payload.calories));
-  formData.append("protein", String(payload.protein));
-  formData.append("carbs", String(payload.carbs));
-  formData.append("fat", String(payload.fat));
 
   const result = await request("/food/photo-log", {
     method: "POST",

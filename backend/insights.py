@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import Optional
 from store import meals_db
 
-# 🔥 OPTIONAL: comment this if not using Ollama
+# OPTIONAL: comment this if not using Qwen API
 try:
     from ai_service import get_ai_suggestions
     USE_AI = True
@@ -66,7 +66,7 @@ def get_insights(profile: UserProfile = UserProfile()):
     score = max(score, 0)
 
     # =========================
-    # 🤖 TRY AI (OLLAMA)
+    # TRY AI (Qwen)
     # =========================
     if USE_AI:
         try:
@@ -85,7 +85,7 @@ def get_insights(profile: UserProfile = UserProfile()):
                 return {
                     "health_score": score,
                     "ai": True,
-                    "generated_by": "Ollama (Local AI Fast)",
+                    "generated_by": "Qwen API",
                     "response": ai_response,
                     "total_calories": total_calories,
                     "total_protein": total_protein,

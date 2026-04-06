@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from food import router as food_router
 from insights import router as insights_router
 from image_food import router as image_router
+from free_apis import router as free_api_router
 
 app = FastAPI()
 
@@ -17,6 +18,7 @@ app.add_middleware(
 app.include_router(food_router, prefix="/food")
 app.include_router(insights_router, prefix="/insights")
 app.include_router(image_router, prefix="/food")
+app.include_router(free_api_router, prefix="/free-apis")
 
 
 @app.get("/")

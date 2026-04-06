@@ -1,7 +1,7 @@
 from PIL import Image, ImageFilter
 import io
 from math import exp
-from ai_service import predict_nutrition_from_ollama_image
+from ai_service import predict_nutrition_from_qwen_image
 
 
 def _image_metrics(image: Image.Image):
@@ -81,12 +81,12 @@ def _weighted_macro_average(profile_scores, profiles):
 
 
 def predict_nutrition_from_food_photo(image_bytes: bytes):
-    # Primary path: send image to Ollama and use its direct nutrition output.
-    ollama_result = predict_nutrition_from_ollama_image(image_bytes)
-    if ollama_result:
-        return ollama_result
+    # Primary path: send image to Qwen vision and use its direct nutrition output.
+    qwen_result = predict_nutrition_from_qwen_image(image_bytes)
+    if qwen_result:
+        return qwen_result
 
-    # Fallback path: local visual model when Ollama is unavailable.
+    # Fallback path: local visual model when Qwen vision is unavailable.
     image = Image.open(io.BytesIO(image_bytes))
     metrics = _image_metrics(image)
 
