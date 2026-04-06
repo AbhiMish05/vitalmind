@@ -1,0 +1,17 @@
+<svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="VitalMind mark">
+  <defs>
+    <linearGradient id="vm-core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f1cf95" />
+      <stop offset="100%" stop-color="#a9782f" />
+    </linearGradient>
+    <linearGradient id="vm-ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f5dfa8" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#7f5a1f" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="66" height="66" rx="18" fill="#16151d" />
+  <path d="M36 16C47.046 16 56 24.954 56 36C56 47.046 47.046 56 36 56C24.954 56 16 47.046 16 36C16 24.954 24.954 16 36 16Z" fill="none" stroke="url(#vm-ring)" stroke-width="3" />
+  <path d="M36 23L43.6 31.6L36 49L28.4 31.6L36 23Z" fill="url(#vm-core)" />
+  <circle cx="36" cy="36" r="4.4" fill="#1a1a1a" />
+  <path d="M24 47C28.7 43.9 31.9 42.3 36 42.3C40.1 42.3 43.3 43.9 48 47" stroke="#f2d8a4" stroke-width="2.1" stroke-linecap="round" opacity="0.75" />
+</svg>
