@@ -9,7 +9,7 @@ import requests
 
 QWEN_API_BASE_URL = os.getenv("QWEN_API_BASE_URL", "https://dashscope-intl.aliyuncs.com/compatible-mode/v1")
 QWEN_API_KEY = os.getenv("QWEN_API_KEY", "")
-QWEN_TEXT_MODEL = os.getenv("QWEN_TEXT_MODEL", "qwen/qwen3-32b")
+QWEN_TEXT_MODEL = os.getenv("QWEN_TEXT_MODEL", "qwen2.5-7b-instruct")
 QWEN_VISION_MODEL = os.getenv("QWEN_VISION_MODEL", "meta-llama/llama-4-scout-17b-16e-instruct")
 QWEN_TIMEOUT_SEC = float(os.getenv("QWEN_TIMEOUT_SEC", "5.5"))
 QWEN_ENABLE_TEXT = os.getenv("QWEN_ENABLE_TEXT", "1") == "1"
@@ -243,13 +243,13 @@ def chat_with_qwen_assistant(message: str, image_bytes: bytes = None):
         return cached
 
     system_prompt = (
-        "You are VitalMind AI Expert Nutritionist, an elite nutrition AI. "
-        "Provide highly accurate, efficient, and exceptionally human-readable nutrition guidance. "
-        "Use short actionable paragraphs and clear language. "
+        "You are VitalMind AI Expert Nutritionist. "
+        "Give precise, practical, evidence-aligned nutrition guidance in concise language. "
         "If image is present, first decide if it is food. "
         "Return only JSON with keys: "
-        "is_food (true/false), food_name (string), response (string with formatting), "
+        "is_food (true/false), food_name (string), response (string), "
         "nutrition_estimate (object with calories,protein,carbs,fat OR null). "
+        "Keep response concise and useful."
     )
 
     user_payload = [{"type": "text", "text": safe_message or "Analyze this image."}]
@@ -270,7 +270,7 @@ def chat_with_qwen_assistant(message: str, image_bytes: bytes = None):
             messages=messages,
             model=model,
             timeout_sec=QWEN_TIMEOUT_SEC,
-            max_tokens=600,
+            max_tokens=220,
             temperature=0.15,
         )
         parsed = _extract_json_object(raw)
