@@ -450,6 +450,19 @@ body.theme-light .response-panel {
   display: block;
 }
 
+.chatbot-result {
+  margin-top: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.75rem;
+  background: var(--surface);
+}
+
+.chatbot-result p {
+  margin: 0.3rem 0;
+  color: var(--muted);
+}
+
 .suggestion-list {
   margin-top: 0.95rem;
   display: grid;

@@ -489,6 +489,85 @@ function showOutput(data) {
   `;
 }
 
+function renderChatbotOutput(data) {
+  if (!data || data.error) {
+    showOutput(data || { error: "Chatbot failed" });
+    return;
+  }
+
+  function toReadableAiText(rawValue) {
+    const rawText = String(rawValue || "").trim();
+    if (!rawText) {
+      return "No AI response available.";
+    }
+
+    try {
+      const parsed = JSON.parse(rawText);
+      if (parsed && typeof parsed === "object") {
+        const lines = [];
+        Object.entries(parsed).forEach(([key, value]) => {
+          const prettyKey = key.replace(/_/g, " ");
+          if (value && typeof value === "object") {
+            lines.push(`${prettyKey}: ${JSON.stringify(value)}`);
+          } else {
+            lines.push(`${prettyKey}: ${String(value)}`);
+          }
+        });
+        return lines.join("\n");
+      }
+    } catch (_error) {
+      // Keep plain text fallback.
+    }
+
+    return rawText
+      .replace(/\s{2,}/g, " ")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  }
+
+  const cleanedAssistantText = String(data.response || "No response")
+    .replace(/free api was unavailable, so a local nutrition estimate was used\.?/gi, "")
+    .replace(/qwen key is missing, so fallback image nutrition prediction was used\.?/gi, "")
+    .replace(/qwen key is missing, so free openfoodfacts data was used\.?/gi, "")
+    .replace(/\s{2,}/g, " ")
+    .trim() || "Here is your nutrition analysis.";
+
+  const nutrition = data.nutrition_estimate;
+  let originalReadable = toReadableAiText(data.response || "");
+  if (String(data.model || "").startsWith("free-") || String(data.model || "").startsWith("local-")) {
+    originalReadable = "";
+  }
+  const qualityTag = nutrition
+    ? (Number(nutrition.protein || 0) >= 20 ? "high-protein option" : "moderate-protein option")
+    : "no nutrition estimate available";
+
+  const kcalHint = nutrition
+    ? (Number(nutrition.calories || 0) <= 220 ? "light meal range" : Number(nutrition.calories || 0) <= 500 ? "balanced meal range" : "heavy meal range")
+    : "";
+
+  const nutritionSummary = nutrition
+    ? `${nutrition.calories} kcal, ${nutrition.protein}g protein, ${nutrition.carbs}g carbs, ${nutrition.fat}g fat`
+    : "";
+
+  const readableResponse = [cleanedAssistantText, data.details ? data.details : "", data.model ? data.model : ""]
+    .filter(Boolean)
+    .join(" • ");
+
+  output.innerHTML = `
+    <div class="chatbot-result">
+      <p>${escapeHtml(readableResponse)}</p>
+      ${
+        nutrition
+          ? `
+            <p>${escapeHtml(nutritionSummary)} • ${escapeHtml(`${qualityTag}${kcalHint ? ` • ${kcalHint}` : ""}`)}</p>
+          `
+          : ""
+      }
+      ${originalReadable ? `<pre class="raw-fallback">${escapeHtml(originalReadable)}</pre>` : ""}
+    </div>
+  `;
+}
+
 async function request(path, options = {}) {
   setStatus("Processing", "loading");
 
@@ -594,6 +673,41 @@ document.getElementById("food-photo-form").addEventListener("submit", async (eve
     result.meal.photo_preview = preview;
     showOutput(result);
     registerMeal(result.meal);
+  }
+});
+
+document.getElementById("chatbot-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const text = document.getElementById("chat-message").value.trim();
+  const fileInput = document.getElementById("chat-image-file");
+  const uploadedFile = fileInput.files?.[0] || null;
+
+  const formData = new FormData();
+  formData.append("message", text || "Please analyze this image");
+
+  if (uploadedFile) {
+    formData.append("file", uploadedFile);
+  }
+
+  setStatus("Processing", "loading");
+  try {
+    const response = await fetch(`${API_BASE}/chatbot/message`, {
+      method: "POST",
+      body: formData
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      setStatus("Failed", "error");
+      showOutput(data);
+      return;
+    }
+
+    setStatus("Success", "ok");
+    renderChatbotOutput(data);
+  } catch (error) {
+    setStatus("Network Error", "error");
+    showOutput({ error: "Chat request failed", details: error.message });
   }
 });
 
