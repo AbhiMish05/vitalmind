@@ -401,6 +401,30 @@ input:focus, select:focus {
   transform: scale(1.05);
 }
 
+/* Auth Overlay */
+.auth-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  background: rgba(11, 11, 15, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.6s ease;
+}
+
+.login-card {
+  width: 90vw;
+  max-width: 400px;
+  padding: 40px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(139, 93, 185, 0.2);
+}
+
 /* Floating Chatbot Overlay */
 .floating-chatbot {
   position: fixed;

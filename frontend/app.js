@@ -1,4 +1,25 @@
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "http://127.0.0.1:8000"; // Adjust if backend runs elsewhere
+
+// Firebase Init
+const firebaseConfig = {
+  apiKey: "AIzaSyBXRvc7RgTLNVwz0_0tvpS98j3bE1PZJTc",
+  projectId: "vitalmind-ad326",
+};
+
+let auth, db;
+try {
+  // Use Firebase from the global window object (loaded via CDN)
+  if (window.firebase) {
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+  }
+} catch (e) {
+  console.warn("Firebase init failed", e);
+}
+
+let currentUid = "vitalmind_test_uid";
+
 const THEME_KEY = "vitalmind-theme";
 
 const output = document.getElementById("response-output");
@@ -15,6 +36,11 @@ const chatPreviewContainer = document.getElementById("chat-preview-container");
 const chatPreviewImg = document.getElementById("chat-preview-img");
 const chatRemoveImgBtn = document.getElementById("chat-remove-image-btn");
 const chatImageFile = document.getElementById("chat-image-file");
+
+const authOverlay = document.getElementById("auth-overlay");
+const loginForm = document.getElementById("login-form");
+const loginError = document.getElementById("login-error");
+const navLogoutBtn = document.getElementById("nav-logout-btn");
 
 const mealHistory = [];
 let macroChart = null;
@@ -53,6 +79,125 @@ if (chatRemoveImgBtn) {
     chatPreviewContainer.style.display = "none";
     chatPreviewImg.src = "";
   });
+}
+
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("login-email").value;
+    const pass = document.getElementById("login-pass").value;
+    setStatus("Authenticating", "loading");
+    
+    // Custom logic for test credentials requested
+    if (email === "vitalmind@gmail.com" && pass === "1234") {
+      try {
+        if (auth) {
+           const cred = await auth.signInAnonymously();
+           currentUid = cred.user.uid;
+        }
+      } catch (err) {
+         console.warn("Anon sign in failed, falling back to local UID", err);
+      }
+      completeLogin();
+    } else {
+      if (auth) {
+        try {
+          const cred = await auth.signInWithEmailAndPassword(email, pass);
+          currentUid = cred.user.uid;
+          completeLogin();
+        } catch (err) {
+          loginError.innerText = err.message;
+          loginError.style.display = "block";
+          setStatus("Idle", "ok");
+        }
+      } else {
+        loginError.innerText = "Firebase not initialized.";
+        loginError.style.display = "block";
+        setStatus("Idle", "ok");
+      }
+    }
+  });
+}
+
+function completeLogin() {
+  if (loginError) loginError.style.display = "none";
+  setStatus("System Online", "ok");
+  if (authOverlay) {
+    authOverlay.style.opacity = "0";
+    setTimeout(() => authOverlay.style.display = "none", 600);
+  }
+  if (navLogoutBtn) navLogoutBtn.style.display = "block";
+  loadFirebaseMemory();
+}
+
+if (navLogoutBtn) {
+  navLogoutBtn.addEventListener("click", async () => {
+    if (auth) await auth.signOut();
+    if (authOverlay) {
+      authOverlay.style.display = "flex";
+      // Force repaint
+      void authOverlay.offsetWidth;
+      authOverlay.style.opacity = "1";
+    }
+    navLogoutBtn.style.display = "none";
+    mealHistory.length = 0; // clear local history
+    updateCharts();
+    const chatbotOutputEl = document.getElementById("chatbot-output");
+    if (chatbotOutputEl) chatbotOutputEl.innerHTML = `<p style="color:var(--text-secondary); text-align:center; padding: 20px;">Ready to chat</p>`;
+    setStatus("Idle", "ok");
+  });
+}
+
+async function loadFirebaseMemory() {
+  if (!db) return;
+  try {
+    const docRef = db.collection('users').doc(currentUid);
+    const docSnap = await docRef.get();
+    if (docSnap.exists) {
+      const data = docSnap.data();
+      if (data.meals && Array.isArray(data.meals)) {
+        mealHistory.length = 0;
+        data.meals.forEach(m => mealHistory.push(m));
+        updateCharts();
+      }
+      if (data.chats && Array.isArray(data.chats)) {
+         const chatbotOutputEl = document.getElementById("chatbot-output");
+         if (chatbotOutputEl && data.chats.length > 0) {
+             chatbotOutputEl.innerHTML = "";
+             data.chats.forEach(chatHtml => {
+                 chatbotOutputEl.innerHTML += chatHtml;
+             });
+             chatbotOutputEl.scrollTop = chatbotOutputEl.scrollHeight;
+         }
+      }
+    }
+  } catch(e) {
+    console.error("Firestore error loading memory", e);
+  }
+}
+
+async function saveFirebaseMemory() {
+   if (!db || !currentUid) return;
+   
+   const chatbotOutputEl = document.getElementById("chatbot-output");
+   const chatList = [];
+   if (chatbotOutputEl && chatbotOutputEl.children) {
+      // Save last 15 messages so it doesn't overflow firestore limits quickly over time
+      Array.from(chatbotOutputEl.children).slice(-15).forEach(child => {
+          if (child.id !== "chat-loading" && !child.innerHTML.includes("Ready to chat")) {
+              chatList.push(child.outerHTML);
+          }
+      });
+   }
+   
+   try {
+     await db.collection('users').doc(currentUid).set({
+        meals: mealHistory,
+        chats: chatList
+     }, {merge: true});
+   } catch(e) {
+     console.error("Firestore error saving memory", e);
+   }
 }
 
 function applyTheme(theme) {
@@ -101,6 +246,7 @@ function registerMeal(meal) {
   });
 
   updateCharts();
+  saveFirebaseMemory();
 }
 
 function buildChartData() {
@@ -602,6 +748,7 @@ function renderChatbotOutput(data) {
     `;
     // Scroll to bottom
     chatbotOutputEl.scrollTop = chatbotOutputEl.scrollHeight;
+    saveFirebaseMemory();
   }
 }
 
@@ -738,6 +885,7 @@ document.getElementById("chatbot-form").addEventListener("submit", async (event)
     `;
     chatbotOutputEl.innerHTML += `<div id="chat-loading" style="color: #a855f7; font-size:0.875rem; margin-bottom:12px;">AI is thinking...</div>`;
     chatbotOutputEl.scrollTop = chatbotOutputEl.scrollHeight;
+    saveFirebaseMemory();
   }
 
   // Clear preview and input fields
@@ -789,14 +937,11 @@ document.getElementById("get-insights").addEventListener("click", async () => {
   });
 });
 
-document.getElementById("reset-meals").addEventListener("click", async () => {
-  const reset = await request("/food/reset", {
-    method: "POST"
-  });
-
-  if (reset) {
+document.getElementById("reset-meals").addEventListener("click", () => {
+  if (confirm("Reset all meal data?")) {
     mealHistory.length = 0;
     updateCharts();
+    saveFirebaseMemory();
   }
 });
 
