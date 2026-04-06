@@ -156,7 +156,8 @@ async def chatbot_message(
             }
         except Exception as e:
             local_estimate = _local_food_fallback(query)
-            local_estimate["details"] = f"OpenFoodFacts failed: {str(e)}"
+            # Remove raw stacktrace/errors from UI to keep premium feel
+            local_estimate["details"] = "Used offline algorithms due to API latency."
             return local_estimate
 
     result = chat_with_qwen_assistant(message=message, image_bytes=image_bytes)

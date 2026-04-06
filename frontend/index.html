@@ -1,215 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VitalMind | Premium Nutrition Intelligence</title>
-    <meta
-      name="description"
-      content="VitalMind helps you log food, scan labels, and get personalized nutrition insights."
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <div class="background-glow" aria-hidden="true"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VitalMind | AI Nutrition Intelligence</title>
+  <meta name="description" content="Apple-level design meets AI-powered nutrition intelligence." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- Ambient background glow blobs -->
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
 
-    <nav class="topbar section reveal">
-      <div class="brand-wrap">
-        <img src="./assets/logo-mark.svg" alt="VitalMind logo" class="brand-logo" />
-        <div>
-          <p class="brand-name">VitalMind</p>
-          <p class="brand-tagline">Precision Wellness Intelligence</p>
-        </div>
-      </div>
-      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme">
-        <span class="toggle-icon">◐</span>
-        <span id="theme-label">Dark Luxe</span>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="brand">
+      <div class="logo-glow"></div>
+      VitalMind
+    </div>
+    <div style="display:flex; align-items:center; gap: 16px;">
+      <button id="theme-toggle" style="display:none;"></button>
+      <span id="theme-label" style="display:none;">System Online</span>
+      <button id="nav-chat-btn" class="nav-chat-btn" title="Open AI Chat">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="text-sm" style="font-weight:600;">AI Chat</span>
       </button>
-    </nav>
+    </div>
+  </nav>
 
-    <header class="hero section reveal">
-      <div class="hero-badge">Nutrition Intelligence Suite</div>
-      <h1>VitalMind</h1>
-      <p>
-        A premium wellness console for barcode lookup, OCR label scanning, meal logging,
-        and actionable daily health insights.
-      </p>
-      <div class="hero-meta">
-        <span>FastAPI Backend</span>
-        <span>Rule + AI Insights</span>
-        <span>Realtime Dashboard</span>
+  <!-- 1. HERO SECTION -->
+  <header class="hero container reveal">
+    <h1>Your AI Nutrition<br/>Intelligence System</h1>
+    <p>Track meals. Analyze food. Optimize your body.<br/>Stop guessing and start knowing with precision AI.</p>
+    <div class="btn-group">
+      <button class="primary" onclick="document.getElementById('dashboard-app').scrollIntoView();">Start Tracking</button>
+      <button onclick="document.getElementById('dashboard-app').scrollIntoView();">Try AI Scan</button>
+    </div>
+  </header>
+
+  <!-- 2. VALUE STRIP -->
+  <section class="value-strip reveal">
+    <div class="value-item">
+      <svg class="icon value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Instant nutrition analysis
+    </div>
+    <div class="value-item">
+      <svg class="icon value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      AI-powered insights
+    </div>
+    <div class="value-item">
+      <svg class="icon value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>
+      Zero tracking friction
+    </div>
+  </section>
+
+  <!-- 3. FEATURE SECTIONS -->
+  <section class="feature-section container">
+    <!-- A. AI FOOD SCAN -->
+    <div class="feature-row reveal">
+      <div class="feature-text">
+        <h2 class="typewriter">OCR AI Food Scan</h2>
+        <p>Simply upload an image of a nutrition label or meal. Our computer vision OCR completely breaks down precise macros in milliseconds, eliminating manual entry.</p>
       </div>
-    </header>
-
-    <main class="section-grid">
-      <section class="card reveal" style="--delay: 0.2s">
-        <div class="card-head">
-          <h2>Manual Meal Entry</h2>
-          <span class="icon-bubble" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M6 7h12M6 12h12M6 17h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-            </svg>
-          </span>
+      <div class="feature-ui glass-card">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <h3 class="card-title">Label Analysis</h3>
         </div>
-        <p class="card-subtitle">Log custom meals with exact macros.</p>
-        <form id="manual-form" class="form-grid two-col">
-          <label for="meal-name">Meal Name</label>
-          <input id="meal-name" type="text" placeholder="Grilled Chicken Bowl" required />
-
-          <label for="calories">Calories</label>
-          <input id="calories" type="number" min="0" step="1" placeholder="450" required />
-
-          <label for="protein">Protein (g)</label>
-          <input id="protein" type="number" min="0" step="0.1" placeholder="32" required />
-
-          <label for="carbs">Carbs (g)</label>
-          <input id="carbs" type="number" min="0" step="0.1" placeholder="40" required />
-
-          <label for="fat">Fat (g)</label>
-          <input id="fat" type="number" min="0" step="0.1" placeholder="14" required />
-
-          <button type="submit" class="full-width">Log Meal</button>
-        </form>
-      </section>
-
-      <section class="card reveal" style="--delay: 0.3s">
-        <div class="card-head">
-          <h2>Image Nutrition Scan</h2>
-          <span class="icon-bubble" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <rect x="4" y="5" width="16" height="14" rx="2.2" stroke="currentColor" stroke-width="1.6" />
-              <circle cx="10" cy="11" r="2" stroke="currentColor" stroke-width="1.6" />
-              <path d="M20 16l-4.5-4.5-4.2 4.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </span>
+        <div class="form-group">
+          <div style="border:1px dashed var(--glass-border); padding: 32px; text-align:center; border-radius: 12px; color:var(--text-secondary);">
+            Nutrition_Label_Scan.jpg
+          </div>
         </div>
-        <p class="card-subtitle">Upload a nutrition label image for OCR extraction.</p>
-        <form id="image-form" class="form-grid">
-          <label for="food-image">Select Image</label>
-          <input id="food-image" type="file" accept="image/*" required />
-          <button type="submit">Analyze Image</button>
-        </form>
-      </section>
-
-      <section class="card reveal" style="--delay: 0.35s">
-        <div class="card-head">
-          <h2>Food Photo Log</h2>
-          <span class="icon-bubble" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M4 7h4l1.2-2h5.6L16 7h4v12H4V7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
-              <circle cx="12" cy="13" r="3.2" stroke="currentColor" stroke-width="1.6" />
-            </svg>
-          </span>
-        </div>
-        <p class="card-subtitle">Upload your meal photo and let AI extract calories, protein, carbs, and fat automatically.</p>
-        <form id="food-photo-form" class="form-grid two-col">
-          <label for="food-photo-file">Food Image</label>
-          <input id="food-photo-file" type="file" accept="image/*" required />
-
-          <label for="food-photo-name">Meal Name</label>
-          <input id="food-photo-name" type="text" placeholder="e.g. Chicken Salad" required />
-
-          <button type="submit" class="full-width">Upload & Log Photo Meal</button>
-        </form>
-      </section>
-
-      <section class="card reveal actions" style="--delay: 0.4s">
-        <div class="card-head">
-          <h2>Insights Engine</h2>
-          <span class="icon-bubble" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M5 17l4-4 3 2 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M16 8h3v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </span>
-        </div>
-        <p class="card-subtitle">Generate your daily score and suggestions.</p>
-        <form id="profile-form" class="form-grid two-col profile-form">
-          <label for="user-age">Age</label>
-          <input id="user-age" type="number" min="1" max="120" step="1" placeholder="e.g. 28" />
-
-          <label for="user-bmi">BMI</label>
-          <input id="user-bmi" type="number" min="10" max="60" step="0.1" placeholder="e.g. 23.5" />
-
-          <label for="user-goal">Diet Goal</label>
-          <select id="user-goal">
-            <option value="stay_fit" selected>Stay Fit</option>
-            <option value="weight_loss">Weight Loss</option>
-            <option value="weight_gain">Weight Gain</option>
-          </select>
-        </form>
-        <div class="button-row">
-          <button id="get-insights" type="button">Get Insights</button>
-          <button id="reset-meals" type="button" class="danger">Reset Meals</button>
-        </div>
-      </section>
-
-      <section class="card reveal" style="--delay: 0.42s">
-        <div class="card-head">
-          <h2>AI Chatbot</h2>
-          <span class="icon-bubble" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <rect x="4" y="5" width="16" height="12" rx="3" stroke="currentColor" stroke-width="1.6" />
-              <path d="M9 20h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-              <circle cx="9" cy="11" r="1" fill="currentColor" />
-              <circle cx="15" cy="11" r="1" fill="currentColor" />
-            </svg>
-          </span>
-        </div>
-        <p class="card-subtitle">Chat with an AI expert nutritionist and optionally upload a food image for analysis.</p>
-        <form id="chatbot-form" class="form-grid">
-          <label for="chat-message">Message</label>
-          <input id="chat-message" type="text" placeholder="e.g. Is this food healthy for dinner?" />
-
-          <label for="chat-image-file">Or Upload Image</label>
-          <input id="chat-image-file" type="file" accept="image/*" />
-
-          <button type="submit">Send to Qwen Chatbot</button>
-        </form>
-      </section>
-    </main>
-
-    <section class="section charts reveal" style="--delay: 0.45s">
-      <div class="chart-card">
-        <div class="chart-head">
-          <h2>Macro Composition</h2>
-          <p id="macro-summary">No meal data yet</p>
-        </div>
-        <canvas id="macro-chart" aria-label="Macro doughnut chart"></canvas>
-      </div>
-      <div class="chart-card">
-        <div class="chart-head">
-          <h2>Daily Trend</h2>
-          <p id="trend-summary">Calories and protein trend over logged meals</p>
-        </div>
-        <canvas id="trend-chart" aria-label="Calories and protein trend chart"></canvas>
-      </div>
-    </section>
-
-    <section class="section output reveal" style="--delay: 0.5s">
-      <div class="output-header">
-        <h2>Live Response Console</h2>
-        <span id="status-pill">Ready</span>
-      </div>
-      <div id="response-output" class="response-panel">
-        <div class="response-empty">
-          <h3>Ready for your first action</h3>
-          <p>Log a meal, scan nutrition label, upload food photo, or request insights.</p>
+        <div class="macros-grid">
+          <div class="macro-box cal"><div class="val">420</div><div class="lbl">Kcal</div></div>
+          <div class="macro-box pro"><div class="val">35g</div><div class="lbl">Pro</div></div>
+          <div class="macro-box car"><div class="val">40g</div><div class="lbl">Car</div></div>
+          <div class="macro-box fat"><div class="val">12g</div><div class="lbl">Fat</div></div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <footer class="section footer reveal" style="--delay: 0.6s">
-      <p>Crafted for high-performance nutrition workflows.</p>
-    </footer>
+    <!-- B. MEAL TRACKING -->
+    <div class="feature-row reveal">
+      <div class="feature-text">
+        <h2 class="typewriter">Instant Meal Tracking</h2>
+        <p>Log your meals manually or through our high-speed photo AI logger. Visual macro cards keep you informed instantly of your precise dietary trajectory.</p>
+      </div>
+      <div class="feature-ui glass-card">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
+          <h3 class="card-title">Daily Macros</h3>
+        </div>
+        <div style="height: 120px; background: linear-gradient(to right, rgba(139,93,185,0.2), rgba(65,105,225,0.1)); border-radius: 12px; margin-bottom: 16px;"></div>
+        <div class="metric-row"><span>Calories</span> <strong style="color:var(--calories-color)">1840 / 2200</strong></div>
+        <div class="metric-row"><span>Protein</span> <strong style="color:var(--protein-color)">145g / 160g</strong></div>
+      </div>
+    </div>
+  </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-    <script src="./app.js"></script>
-  </body>
+  <!-- 4. PRODUCT PREVIEW SECTION (ACTUAL UI) -->
+  <section id="dashboard-app" class="dashboard-section container reveal">
+    <div class="dashboard-section-header">
+      <h2 class="typewriter">VitalMind Intelligence Console</h2>
+      <p style="margin:0 auto;">Your live telemetry. Log, analyze, and optimize right here.</p>
+    </div>
+
+    <div class="dashboard-grid">
+      
+      <!-- Manual Entry -->
+      <div class="glass-card col-span-4">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <h3 class="card-title">Manual Log</h3>
+        </div>
+        <form id="manual-form">
+          <div class="form-group">
+            <input id="meal-name" type="text" placeholder="Meal Name" required />
+          </div>
+          <div class="flex-responsive" style="display:flex; gap:12px;">
+            <div class="form-group" style="width:100%;"><input id="calories" type="number" placeholder="Kcal" required /></div>
+            <div class="form-group" style="width:100%;"><input id="protein" type="number" step="0.1" placeholder="Pro (g)" required /></div>
+          </div>
+          <div class="flex-responsive" style="display:flex; gap:12px;">
+            <div class="form-group" style="width:100%;"><input id="carbs" type="number" step="0.1" placeholder="Carbs (g)" required /></div>
+            <div class="form-group" style="width:100%;"><input id="fat" type="number" step="0.1" placeholder="Fat (g)" required /></div>
+          </div>
+          <button type="submit" style="width:100%; margin-top: 8px;">Log Meal</button>
+        </form>
+      </div>
+
+      <!-- OCR & Photo Log -->
+      <div class="glass-card col-span-4">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <h3 class="card-title">AI Food Scanners</h3>
+        </div>
+        
+        <form id="image-form" style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--glass-border);">
+          <label style="margin-bottom:8px; display:block;">Label OCR</label>
+          <input id="food-image" type="file" accept="image/*" required style="margin-bottom:8px;"/>
+          <button type="submit" style="width:100%;" class="primary">Extract Label</button>
+        </form>
+
+        <form id="food-photo-form">
+          <label style="margin-bottom:8px; display:block;">Photo AI Prediction</label>
+          <div class="form-group">
+            <input id="food-photo-name" type="text" placeholder="Optional Name" />
+          </div>
+          <input id="food-photo-file" type="file" accept="image/*" required style="margin-bottom:8px;"/>
+          <button type="submit" style="width:100%;" class="primary">Predict Photo Macros</button>
+        </form>
+      </div>
+
+      <!-- Insights Engine & Console -->
+      <div class="glass-card col-span-4">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <h3 class="card-title">Insights Engine</h3>
+        </div>
+        <form id="profile-form" style="margin-bottom: 16px;">
+          <div class="flex-responsive" style="display:flex; gap:12px;">
+            <div class="form-group" style="width:100%;"><input id="user-age" type="number" placeholder="Age" /></div>
+            <div class="form-group" style="width:100%;"><input id="user-bmi" type="number" step="0.1" placeholder="BMI" /></div>
+          </div>
+          <div class="form-group">
+            <select id="user-goal">
+              <option value="stay_fit" selected>Stay Fit</option>
+              <option value="weight_loss">Weight Loss</option>
+              <option value="weight_gain">Weight Gain</option>
+            </select>
+          </div>
+        </form>
+        <div class="flex-responsive" style="display:flex; gap:12px; margin-bottom: 24px;">
+          <button id="get-insights" style="flex: 1;" class="primary">Core Insights</button>
+          <button id="reset-meals" class="danger-btn" title="Reset All Meals">Reset</button>
+        </div>
+
+        <div style="border-top: 1px solid var(--glass-border); padding-top: 16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <span class="text-sm" style="color:var(--text-secondary);">Live Console</span>
+            <span id="status-pill" class="text-xs" style="padding: 2px 8px; border-radius:100px; background:rgba(255,255,255,0.1);">Ready</span>
+          </div>
+          <div id="response-output" class="output-panel text-sm">
+            <span style="color:var(--text-secondary);">Waiting for input...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="glass-card col-span-6">
+        <div class="card-header" style="justify-content:space-between;">
+          <h3 class="card-title">Macro Composition</h3>
+          <span id="macro-summary" class="text-xs" style="color:var(--text-secondary);">No data</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="macro-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="glass-card col-span-6">
+        <div class="card-header" style="justify-content:space-between;">
+          <h3 class="card-title">Metabolic Trend</h3>
+          <span id="trend-summary" class="text-xs" style="color:var(--text-secondary);">Calories / Protein</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="trend-chart"></canvas>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- 5. CTA SECTION -->
+  <section class="cta-section reveal">
+    <div class="container">
+      <h2>Stop guessing your nutrition.</h2>
+      <button class="primary" style="margin-top:24px; padding: 16px 40px; font-size: 1.1rem;">Start Free</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Crafted for high-performance nutrition workflows.</p>
+  </footer>
+
+  <!-- FLOATING CHATBOT UI -->
+  <div id="floating-chatbot" class="floating-chatbot glass-card">
+    <div class="card-header" style="margin-bottom: 12px; border-bottom: 1px solid var(--glass-border); padding-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <div>
+          <h3 class="card-title" style="font-size:1rem;">AI Nutritionist</h3>
+          <span class="text-xs" style="color:#10b981;">Online</span>
+        </div>
+      </div>
+      <button id="chatbot-close-btn" title="Close" style="background:transparent; border:none; color:var(--text-secondary); cursor:pointer; padding:4px;">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="chat-panel">
+      <div id="chatbot-output" class="chat-messages text-sm">
+        <div style="color:var(--text-secondary); padding-bottom:8px;">Ready to chat or analyze an image...</div>
+      </div>
+      
+      <form id="chatbot-form" style="display:flex; flex-direction:column; gap:8px;">
+        <div id="chat-preview-container" class="chat-image-preview">
+          <img id="chat-preview-img" src="" alt="preview"/>
+          <button type="button" id="chat-remove-image-btn" class="remove-image-btn" title="Remove image">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <input id="chat-message" type="text" placeholder="Ask AI about food..." />
+        <div style="display:flex; gap:8px;">
+          <input id="chat-image-file" type="file" accept="image/*" style="opacity:0; position:absolute; width:0.1px;" />
+          <label for="chat-image-file" style="cursor:pointer; flex: 1; text-align:center; padding: 14px 16px; border-radius:12px; background: rgba(255,255,255,0.05); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:center; gap:8px; color:var(--text-secondary);">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="transparent" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Attach Image
+          </label>
+          <button type="submit" class="primary" style="flex: 1;">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script>
+    // Intersection Observer for scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    // Typewriter effect observer
+    const twObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !entry.target.classList.contains('typed')) {
+          entry.target.classList.add('typed');
+          const text = entry.target.getAttribute('data-text') || entry.target.innerText;
+          entry.target.innerText = '';
+          entry.target.style.opacity = 1;
+          let i = 0;
+          function type() {
+            if (i < text.length) {
+              entry.target.innerText += text.charAt(i);
+              i++;
+              setTimeout(type, 30);
+            }
+          }
+          type();
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.typewriter').forEach((el) => {
+      el.setAttribute('data-text', el.innerText);
+      el.innerText = '\u00A0'; // Preserve some height temporarily
+      twObserver.observe(el);
+    });
+  </script>
+  <script src="./app.js"></script>
+</body>
 </html>

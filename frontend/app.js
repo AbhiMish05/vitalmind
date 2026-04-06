@@ -7,9 +7,53 @@ const themeToggle = document.getElementById("theme-toggle");
 const themeLabel = document.getElementById("theme-label");
 const macroSummary = document.getElementById("macro-summary");
 
+const chatbotOutput = document.getElementById("chatbot-output");
+const floatChatbot = document.getElementById("floating-chatbot");
+const navChatBtn = document.getElementById("nav-chat-btn");
+const chatCloseBtn = document.getElementById("chatbot-close-btn");
+const chatPreviewContainer = document.getElementById("chat-preview-container");
+const chatPreviewImg = document.getElementById("chat-preview-img");
+const chatRemoveImgBtn = document.getElementById("chat-remove-image-btn");
+const chatImageFile = document.getElementById("chat-image-file");
+
 const mealHistory = [];
 let macroChart = null;
 let trendChart = null;
+
+if (navChatBtn) {
+  navChatBtn.addEventListener("click", () => {
+    floatChatbot.classList.add("maximized");
+    document.body.style.overflow = "hidden";
+  });
+}
+
+if (chatCloseBtn) {
+  chatCloseBtn.addEventListener("click", () => {
+    floatChatbot.classList.remove("maximized");
+    document.body.style.overflow = "";
+  });
+}
+
+if (chatImageFile) {
+  chatImageFile.addEventListener("change", () => {
+    const file = chatImageFile.files?.[0];
+    if (file) {
+      chatPreviewImg.src = URL.createObjectURL(file);
+      chatPreviewContainer.style.display = "block";
+    } else {
+      chatPreviewContainer.style.display = "none";
+      chatPreviewImg.src = "";
+    }
+  });
+}
+
+if (chatRemoveImgBtn) {
+  chatRemoveImgBtn.addEventListener("click", () => {
+    chatImageFile.value = "";
+    chatPreviewContainer.style.display = "none";
+    chatPreviewImg.src = "";
+  });
+}
 
 function applyTheme(theme) {
   const isLight = theme === "light";
@@ -22,26 +66,13 @@ function applyTheme(theme) {
 }
 
 function getThemeTokens() {
-  const light = document.body.classList.contains("theme-light");
-
-  if (light) {
-    return {
-      text: "#2b2a2e",
-      grid: "rgba(43, 42, 46, 0.18)",
-      calories: "#b06a2f",
-      protein: "#2f7c5d",
-      carbs: "#8b5db9",
-      fat: "#b74d62"
-    };
-  }
-
   return {
-    text: "#e9edf2",
-    grid: "rgba(233, 237, 242, 0.15)",
-    calories: "#d39f53",
-    protein: "#6fc88f",
-    carbs: "#8e6bd1",
-    fat: "#d36b78"
+    text: "#ffffff",
+    grid: "rgba(255, 255, 255, 0.08)",
+    calories: "#f59e0b",
+    protein: "#10b981",
+    carbs: "#a855f7",
+    fat: "#ef4444"
   };
 }
 
@@ -553,19 +584,25 @@ function renderChatbotOutput(data) {
     .filter(Boolean)
     .join(" • ");
 
-  output.innerHTML = `
-    <div class="chatbot-result">
-      <p>${escapeHtml(readableResponse)}</p>
-      ${
-        nutrition
-          ? `
-            <p>${escapeHtml(nutritionSummary)} • ${escapeHtml(`${qualityTag}${kcalHint ? ` • ${kcalHint}` : ""}`)}</p>
-          `
-          : ""
-      }
-      ${originalReadable ? `<pre class="raw-fallback">${escapeHtml(originalReadable)}</pre>` : ""}
-    </div>
-  `;
+  const chatbotOutputEl = document.getElementById("chatbot-output");
+  if (chatbotOutputEl) {
+    chatbotOutputEl.innerHTML = `
+      <div class="chatbot-result" style="margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px;">
+        <span class="text-xs" style="color: #a855f7; display:block; margin-bottom:4px; font-weight:600;">AI Assistant</span>
+        <p>${escapeHtml(readableResponse)}</p>
+        ${
+          nutrition
+            ? `
+              <p style="margin-top:8px;">${escapeHtml(nutritionSummary)} • ${escapeHtml(`${qualityTag}${kcalHint ? ` • ${kcalHint}` : ""}`)}</p>
+            `
+            : ""
+        }
+        ${originalReadable ? `<pre class="raw-fallback" style="margin-top:8px;">${escapeHtml(originalReadable)}</pre>` : ""}
+      </div>
+    `;
+    // Scroll to bottom
+    chatbotOutputEl.scrollTop = chatbotOutputEl.scrollHeight;
+  }
 }
 
 async function request(path, options = {}) {
@@ -686,6 +723,29 @@ document.getElementById("chatbot-form").addEventListener("submit", async (event)
   const formData = new FormData();
   formData.append("message", text || "Please analyze this image");
 
+  // Show user message in chat
+  const chatbotOutputEl = document.getElementById("chatbot-output");
+  if (chatbotOutputEl) {
+    if (chatbotOutputEl.innerHTML.includes("Ready to chat")) {
+      chatbotOutputEl.innerHTML = "";
+    }
+    chatbotOutputEl.innerHTML += `
+      <div style="margin-bottom: 12px; padding: 12px; background: rgba(43, 42, 46, 0.5); border-radius: 12px; align-self: flex-end;">
+        <span class="text-xs" style="color: #9CA3AF; display:block; margin-bottom:4px; font-weight:600;">You</span>
+        <p>${escapeHtml(text || "Uploaded an image for analysis")}</p>
+        ${uploadedFile ? `<div class="chat-image-preview" style="display:block; margin-top:8px; opacity:0.8;"><img src="${chatPreviewImg.src}" /></div>` : ""}
+      </div>
+    `;
+    chatbotOutputEl.innerHTML += `<div id="chat-loading" style="color: #a855f7; font-size:0.875rem; margin-bottom:12px;">AI is thinking...</div>`;
+    chatbotOutputEl.scrollTop = chatbotOutputEl.scrollHeight;
+  }
+
+  // Clear preview and input fields
+  if (chatImageFile) chatImageFile.value = "";
+  if (chatPreviewContainer) chatPreviewContainer.style.display = "none";
+  if (chatPreviewImg) chatPreviewImg.src = "";
+  document.getElementById("chat-message").value = "";
+
   if (uploadedFile) {
     formData.append("file", uploadedFile);
   }
@@ -703,9 +763,16 @@ document.getElementById("chatbot-form").addEventListener("submit", async (event)
       return;
     }
 
+    // Remove loading indicator
+    const loadingEl = document.getElementById("chat-loading");
+    if (loadingEl) loadingEl.remove();
+
     setStatus("Success", "ok");
     renderChatbotOutput(data);
   } catch (error) {
+    const loadingEl = document.getElementById("chat-loading");
+    if (loadingEl) loadingEl.remove();
+
     setStatus("Network Error", "error");
     showOutput({ error: "Chat request failed", details: error.message });
   }
